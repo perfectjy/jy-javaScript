@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- <script defer src="../js/variable.js"></script> -->
+  <!-- <script defer src="../js/class.js"></script> -->
+  <!-- <script defer src="../js/object.js"></script> -->
+  <!-- <script defer src="../js/array.js"></script> -->
+  <!-- <script defer src="../js/array-api.js"></script> -->
+  <!-- <script defer src="../js/json.js"></script> -->
+  <!-- <script defer src="../async/callback.js"></script> -->
+  <!-- <script defer src="../async/promise.js"></script> -->
+  <!-- <script defer src="../async/callback-to-promise.js"></script> -->
+  <script defer src="../async/async.js"></script>
+  <style>
+    html, body{margin: 0; padding: 0; height: 100%;}
+    
+  </style>
+</head>
+<body>
+  <h2>ㅇㅇㅇㅇ SYSTEM 직원 정보</h2>
+  <form id="infoForm" name="info" action="https://www.naver.com" method="get">
+    <fieldset>
+      <label for="name">이름:</label>
+      <input type="text" id="name" name="name" required><br><br>
+  
+      <label for="department">부서:</label>
+      <select id="department" name="department">
+        <option value="경영관리">경영관리</option>
+        <option value="사업관리">사업관리</option>
+      </select><br><br>
+  
+      <label for="position">직급:</label>
+      <select id="position" name="position">
+        <option value="사원">사원</option>
+        <option value="주임">주임</option>
+      </select><br><br>
+  
+      <label for="entryDate">입사일:</label>
+      <input type="date" id="entryDate" name="entryDate" required><br><br>
+  
+      <label for="email">이메일:</label>
+      <input type="email" id="email" name="email" required><br><br>
+  
+      <div class="search">
+        <label for="search">검색:</label>
+        <input type="text" id="search" name="search">
+        <input type="submit" value="등록">
+        <input type="reset" value="초기화"> 
+      </div>
+    </fieldset>
+  </form>
+
+  <table id="infoTable" class="infoTable">
+    <caption>ㅇㅇㅇㅇ SYSTEM 직원 정보표</caption>
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">이름</th>
+        <th scope="col">부서</th>
+        <th scope="col">직급</th>
+        <th scope="col">입사일</th>
+        <th scope="col">근속연수</th>
+        <th scope="col">이메일</th>
+        <th scope="col">수정</th>
+        <th scope="col">삭제</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>순남이</td>
+        <td>경영관리</td>
+        <td>전임</td>
+        <td>2019-03-18</td>
+        <td>0</td>
+        <td>abcb1@naver.com</td>
+        <td>
+          <button type="button" class="edit">수정</button>
+        </td>
+        <td>
+          <button type="button" class="del">삭제</button>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>순남이친구</td>
+        <td>경영관리</td>
+        <td>전임</td>
+        <td>2019-03-19</td>
+        <td>0</td>
+        <td>abcb2@naver.com</td>
+        <td>
+          <button type="button" class="edit">수정</button>
+        </td>
+        <td>
+          <button type="button" class="del">삭제</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("infoForm");
+    const table = document.getElementById("infoTable").getElementsByTagName('tbody')[0];
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // Get form input values
+      const name = document.getElementById("name").value;
+      const department = document.getElementById("department").value;
+      const position = document.getElementById("position").value;
+      const entryDate = document.getElementById("entryDate").value;
+      const email = document.getElementById("email").value;
+
+      // Create a new table row
+      const newRow = table.insertRow(-1); // -1 to append as the last row
+
+      // Insert cells into the new row
+      const cellNum = newRow.insertCell(0);
+      const cellName = newRow.insertCell(1);
+      const cellDepartment = newRow.insertCell(2);
+      const cellPosition = newRow.insertCell(3);
+      const cellEntryDate = newRow.insertCell(4);
+      const cellLengthOfService = newRow.insertCell(5);
+      const cellEmail = newRow.insertCell(6);
+      const cellEditButton = newRow.insertCell(7);
+      const cellDeleteButton = newRow.insertCell(8);
+
+      // Update the cells with form values
+      cellNum.textContent = table.rows.length;
+      cellName.textContent = name;
+      cellDepartment.textContent = department;
+      cellPosition.textContent = position;
+      cellEntryDate.textContent = entryDate;
+
+      // Calculate length of service (years, for example)
+      const today = new Date();
+      const employmentDate = new Date(entryDate);
+      const yearsOfService = today.getFullYear() - employmentDate.getFullYear();
+      cellLengthOfService.textContent = yearsOfService;
+
+      cellEmail.textContent = email;
+
+      // Buttons (Edit and Delete)
+      cellEditButton.innerHTML = '<button type="button" class="edit">수정</button>';
+      cellDeleteButton.innerHTML = '<button type="button" class="del">삭제</button>';
+
+      // Reset form fields
+      form.reset(); 
+    });
+  
+    const editBtn = document.querySelectorAll('.edit');
+    for(let btn of editBtn){
+      btn.addEventListener('click', (event) => {
+        const rowNum = event.target.closest('tr');
+        
+        table.deleteRow(rowNum);  
+      });
+    }
+
+    
+
+  });
+</script>
+  
+</body>
+</html>
