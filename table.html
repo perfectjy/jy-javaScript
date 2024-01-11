@@ -4,19 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <!-- <script defer src="../js/variable.js"></script> -->
-  <!-- <script defer src="../js/class.js"></script> -->
-  <!-- <script defer src="../js/object.js"></script> -->
-  <!-- <script defer src="../js/array.js"></script> -->
-  <!-- <script defer src="../js/array-api.js"></script> -->
-  <!-- <script defer src="../js/json.js"></script> -->
-  <!-- <script defer src="../async/callback.js"></script> -->
-  <!-- <script defer src="../async/promise.js"></script> -->
-  <!-- <script defer src="../async/callback-to-promise.js"></script> -->
-  <script defer src="../async/async.js"></script>
   <style>
     html, body{margin: 0; padding: 0; height: 100%;}
-    
   </style>
 </head>
 <body>
@@ -48,7 +37,7 @@
         <label for="search">검색:</label>
         <input type="text" id="search" name="search">
         <input type="submit" value="등록">
-        <input type="reset" value="초기화"> 
+        <input type="reset" class="resetBtn" value="초기화"> 
       </div>
     </fieldset>
   </form>
@@ -68,45 +57,63 @@
         <th scope="col">삭제</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>순남이</td>
-        <td>경영관리</td>
-        <td>전임</td>
-        <td>2019-03-18</td>
-        <td>0</td>
-        <td>abcb1@naver.com</td>
-        <td>
-          <button type="button" class="edit">수정</button>
-        </td>
-        <td>
-          <button type="button" class="del">삭제</button>
-        </td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>순남이친구</td>
-        <td>경영관리</td>
-        <td>전임</td>
-        <td>2019-03-19</td>
-        <td>0</td>
-        <td>abcb2@naver.com</td>
-        <td>
-          <button type="button" class="edit">수정</button>
-        </td>
-        <td>
-          <button type="button" class="del">삭제</button>
-        </td>
-      </tr>
+    <tbody class="tbody">
+     
     </tbody>
   </table>
 
 <script>
+
   document.addEventListener("DOMContentLoaded", () => {
+
+    var date = new Date('3/18/2019');
+    var nowDate = new Date();
+
+    var diffTime1 = Math.abs(nowDate-date);
+    var diffDay1 = Math.ceil(diffTime1/(1000*60*60*24));
+
+    var temp_menu = '';
+    temp_menu += '<tr>';
+      temp_menu += '<td>1</td>';
+      temp_menu += '<td>순남이</td>';
+      temp_menu += '<td>경영관리</td>';
+      temp_menu += '<td>전임</td>';
+      temp_menu += '<td>2019-03-18</td>';
+      temp_menu += '<td>'+diffDay1+'</td>';
+      temp_menu += '<td>abcb1@naver.com</td>';
+      temp_menu += '<td>';
+      temp_menu += ' <button type="button" class="edit">수정</button>';
+      temp_menu += ' </td>';
+      temp_menu += '<td>';
+      temp_menu += '<button type="button" class="del" value="0">삭제</button>';
+      temp_menu += '</td>';
+      temp_menu += '</tr>';
+
+      date = new Date('1/1/2024');
+      diffTime1 = Math.abs(nowDate-date);
+      var diffDay2 = Math.ceil(diffTime1/(1000*60*60*24));
+
+      temp_menu += '<tr>';
+      temp_menu += '  <td>2</td>';
+      temp_menu += '<td>순남이친구</td>';
+      temp_menu += '<td>경영관리</td>';
+      temp_menu += '<td>전임</td>';
+      temp_menu += '<td>2024-01-01</td>';
+      temp_menu += '<td>'+diffDay2+'</td>';
+      temp_menu += '<td>abcb2@naver.com</td>';
+      temp_menu += '<td>';
+      temp_menu += '<button type="button" class="edit">수정</button>';
+      temp_menu += '</td>';
+      temp_menu += '<td>';
+      temp_menu += '<button type="button" class="del" value="1">삭제</button>';
+      temp_menu += '</td>';
+      temp_menu += '</tr>';
+  ;
+  document.querySelector('tbody').insertAdjacentHTML('beforeend', temp_menu);
+
     const form = document.getElementById("infoForm");
     const table = document.getElementById("infoTable").getElementsByTagName('tbody')[0];
-
+    var index = 2;
     form.addEventListener("submit", (event) => {
       event.preventDefault();
 
@@ -116,6 +123,15 @@
       const position = document.getElementById("position").value;
       const entryDate = document.getElementById("entryDate").value;
       const email = document.getElementById("email").value;
+      
+      var splitDate = entryDate.split('-');
+      var date = new Date(splitDate[1]+'/'+splitDate[2]+'/'+splitDate[0]);
+      var nowDate = new Date();
+
+      var diffTime1 = Math.abs(nowDate-date);
+      var diffDay3 = Math.ceil(diffTime1/(1000*60*60*24));
+
+      var workDate = diffDay3;
 
       // Create a new table row
       const newRow = table.insertRow(-1); // -1 to append as the last row
@@ -142,30 +158,84 @@
       const today = new Date();
       const employmentDate = new Date(entryDate);
       const yearsOfService = today.getFullYear() - employmentDate.getFullYear();
-      cellLengthOfService.textContent = yearsOfService;
+      cellLengthOfService.textContent = workDate;  //근속일자
 
       cellEmail.textContent = email;
-
+      
       // Buttons (Edit and Delete)
       cellEditButton.innerHTML = '<button type="button" class="edit">수정</button>';
-      cellDeleteButton.innerHTML = '<button type="button" class="del">삭제</button>';
+      cellDeleteButton.innerHTML = '<button type="button" class="del" value="'+index+'">삭제</button>';
+      index++;
 
-      // Reset form fields
-      form.reset(); 
-    });
-  
-    const editBtn = document.querySelectorAll('.edit');
+      var editBtn = document.querySelectorAll('.del');
     for(let btn of editBtn){
       btn.addEventListener('click', (event) => {
-        const rowNum = event.target.closest('tr');
+        const rowNum = event.target.value;
         
         table.deleteRow(rowNum);  
       });
     }
 
+      // Reset form fields
+      form.reset(); 
+    });
+  
+    const editBtn = document.querySelectorAll('.del');
+    for(let btn of editBtn){
+      btn.addEventListener('click', (event) => {
+        const rowNum = event.target.value;
+        
+        table.deleteRow(rowNum);  
+      });
+    }
+
+    const resetBtn = document.querySelector('.resetBtn');
+    const tbody = document.querySelector('tbody');
+    const tr = tbody.querySelectorAll('tr');
+
+    resetBtn.addEventListener('click', () => {
+
+      const delbtn = document.querySelectorAll('.del');
+      console.log('=====>'+delbtn.length);
+
+      for(let btn of delbtn) {
+        
+        table.deleteRow(btn); 
+      }
+      index = 0;
+      
+    });
+
+
+    function leadingZeros(n, digits) {
+      let zero = '';
+      n = n.toString();
+
+      if (n.length < digits) {
+          for (i = 0; i < digits - n.length; i++)
+              zero += '0';
+      }
+      return zero + n;
+    }
+    let rsvDate = "2020-01-01";
+    let now = new Date();
+
+    if(rsvDate){
+      now = 
+        leadingZeros(now.getMonth() + 1, 2) + '/' +
+        leadingZeros(now.getDate(), 2) + '/' + 
+        leadingZeros(now.getFullYear(), 4);
+      if(rsvDate < now){
+        console.log("예약날짜는 현재날짜보다 빠를수 없습니다.");
+      }
+    }
+    
     
 
   });
+
+
+
 </script>
   
 </body>
