@@ -35,10 +35,17 @@ const userStorage = new UserStorage();
 const id = prompt("enter your id");
 const password = prompt("enter your password");
 
-userStorage
-  .loginUser(id, password)
-  .then(userStorage.getRoles)
-  .then((user) => alert(`hello ${user.name}, your have a ${user.role} role`))
-  .catch(console.log);
+// userStorage
+//   .loginUser(id, password)
+//   .then(userStorage.getRoles)
+//   .then((user) => alert(`hello ${user.name}, your have a ${user.role} role`))
+//   .catch(console.log);
 
 // async + await ver
+async function userChecking() {
+  const user = await userStorage.loginUser(id, password);
+  const userRole = await userStorage.getRoles(user);
+  return `hello ${userRole.name}, your have a ${userRole.role} role`;
+}
+
+userChecking().then(console.log);
