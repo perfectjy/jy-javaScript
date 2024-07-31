@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Game</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.bingo-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.bingo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.bingo-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;                                                                                                                                                
+  font-size: 20px;
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#result {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.selected{
+    background-color: #ff9900;
+}
+</style>
+</head>
+<body>
+<div class="bingo-container">
+  <h1>Bingo Game</h1>
+  <div class="bingo-grid" id="bingo-grid" role="grid">
+    <!-- Bingo grid will be generated dynamically -->
+  </div>
+  <button onclick="resetGame()">New Game</button>
+  <div id="result" aria-live="polite" role="status"></div>
+</div>
+<script defer>
+// Define Bingo grid (5x5)
+const gridSize = 5;
+const maxNumber = gridSize * gridSize;
+let bingoNumbers = [];
+
+// Function to generate a new Bingo grid
+function generateBingoGrid() {
+  let grid = document.getElementById('bingo-grid');
+  grid.innerHTML = '';
+  grid.setAttribute('aria-labelledby', 'bingo-heading');
+
+  // Generate random unique numbers for Bingo grid
+  let availableNumbers = Array.from({ length: maxNumber }, (_, i) => i + 1);
+  shuffleArray(availableNumbers);
+
+  bingoNumbers = availableNumbers.slice(0, gridSize * gridSize);
+
+  // Create grid cells
+  for (let i = 0; i < gridSize * gridSize; i++) {
+    let cell = document.createElement('div');
+    cell.classList.add('bingo-cell');
+    cell.textContent = bingoNumbers[i];
+    cell.setAttribute('role', 'gridcell');
+    cell.setAttribute('aria-readonly', 'true');
+    cell.setAttribute('tabindex', '0');
+    cell.addEventListener('click', () => toggleSelected(cell));
+    cell.addEventListener('keydown', (event) => handleCellKeyPress(event, cell));
+    grid.appendChild(cell);
+  }
+}
+
+// Function to shuffle array elements (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+// Function to toggle selected state of Bingo cell
+function toggleSelected(cell) {
+  if( cell.classList.contains('selected') ) {
+    cell.classList.remove('selected');
+  } else {
+    cell.classList.add('selected');
+  }
+  checkBingo();
+}
+
+function handleCellKeyPress(event, cell) {
+    if( event.key === 'Enter' ) {
+        toggleSelected(cell);
+    }
+}
+
+
+// Function to check if a Bingo is completed
+function checkBingo() {
+  let rows = Array.from({ length: gridSize }, (_, i) =>
+    bingoNumbers.slice(i * gridSize, (i + 1) * gridSize)
+  );
+
+  let columns = Array.from({ length: gridSize }, (_, i) =>
+    bingoNumbers.filter((_, j) => j % gridSize === i)
+  );
+
+  let diagonals = [
+    bingoNumbers.filter((_, i) => i % (gridSize + 1) === 0),
+    bingoNumbers.filter((_, i) => i % (gridSize - 1) === 0 && i > 0 && i < gridSize * gridSize - 1)
+  ];
+
+  let lines = rows.concat(columns).concat(diagonals);
+
+  for (let line of lines) {
+    if (line.every(num => document.querySelector(`.bingo-cell[data-number="${num}"]`).classList.contains('selected'))) {
+      displayResult('Bingo! You won!');
+      return;
+    }
+  }
+}
+
+// Function to display result message
+function displayResult(message) {
+  let resultDiv = document.getElementById('result');
+  resultDiv.textContent = message;
+}
+
+// Function to reset the game
+function resetGame() {
+  generateBingoGrid();
+  let resultDiv = document.getElementById('result');
+  resultDiv.textContent = '';
+}
+
+// Initialize game
+generateBingoGrid();
+
+</script>
+</body>
+</html>

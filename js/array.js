@@ -1,6 +1,8 @@
 "use strict";
 
 // 1.
+const arr1 = new Array();
+const arr2 = [1, 2];
 
 // 2. Index position
 const fruits = ["사과", "바나나", "포도"];
@@ -67,7 +69,7 @@ console.log(fruits);
 console.log(fruits.indexOf("레몬")); // 있으면 해당 인덱스 출력
 console.log(fruits.indexOf("수박")); // 없으면 -1
 
-// includes
+// includesy 
 console.log(fruits.includes("레몬")); // 있으면 true
 console.log(fruits.includes("수박")); // 없으면 false
 

@@ -84,3 +84,9 @@ const calculate = (command, a, b) => {
 };
 
 console.log(calculate("substract", 10, 2));
+
+const array = [1, 2, 3, 4];
+let result = array.some(num => num > 2);
+console.log(`결과:`, result); // true
+result = array.every(num => num > 2);
+console.log(`결과:`, result); // false

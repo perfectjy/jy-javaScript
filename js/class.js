@@ -29,11 +29,16 @@ class User {
 
   // 값을 리턴
   get age() {
-    return this.age;
+    return this._age;
   }
   // 값을 설정
   set age(value) {
-    this.age = value;
+    // if(value < 0) {
+    // throw Error('age can not be negative');
+    //}
+
+    this._age = value < 0 ? 0 : value;
+    //this.age = value;
   }
 }
 
